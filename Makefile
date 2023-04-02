@@ -12,7 +12,7 @@ CFLAGS=-Iinclude
 MODEL = --code-model=large --data-model=small
 LIB_MODEL = lc-sd
 
-FOENIX_LIB = $(FOENIX)/foenix-$(LIB_MODEL).a
+FOENIX_LIB = $(FOENIX)/foenix-$(LIB_MODEL).a 
 A2560U_RULES = $(FOENIX)/linker-files/a2560u-simplified.scm
 A2560K_RULES = $(FOENIX)/linker-files/a2560k-simplified.scm
 
@@ -34,11 +34,13 @@ obj/%-debug.o: %.c $(DEPDIR)/%-debug.d | $(DEPDIR)
 	@cc68k $(CFLAGS) --core=68000 $(MODEL) --debug --dependencies -MQ$@ >$(DEPDIR)/$*-debug.d $<
 	cc68k $(CFLAGS) --core=68000 $(MODEL) --debug --list-file=$(@:%.o=%.lst) -o $@ $<
 
+# clib-68000-$(LIB_MODEL)-Foenix.a
+# --rtattr printf=reduced
 seraterm.pgz:  $(OBJS) $(FOENIX_LIB)
-	ln68k -o $@ $^ $(A2560U_RULES) clib-68000-$(LIB_MODEL)-Foenix.a --output-format=pgz --list-file=seraterm.lst --cross-reference --rtattr printf=reduced --rtattr cstartup=Foenix_user
+	ln68k -o $@ $^ $(A2560K_RULES)  clib-68000-$(LIB_MODEL)-Foenix.a --output-format=pgz --list-file=seraterm.lst --cross-reference --rtattr cstartup=Foenix_user
 
 seraterm.hex:  $(OBJS) $(FOENIX_LIB)
-	ln68k -o $@ $^ $(A2560K_RULES) clib-68000-$(LIB_MODEL)-Foenix.a --output-format=intel-hex --list-file=seraterm.lst --cross-reference --rtattr printf=reduced --rtattr cstartup=Foenix_morfe --stack-size=2000
+	ln68k -o $@ $^ $(A2560K_RULES)  clib-68000-$(LIB_MODEL)-Foenix.a --output-format=intel-hex --list-file=seraterm.lst --cross-reference --rtattr printf=reduced --rtattr cstartup=Foenix_morfe --stack-size=2000
 
 $(FOENIX_LIB):
 	(cd $(FOENIX) ; make all)
