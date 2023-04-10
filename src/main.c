@@ -14,6 +14,6 @@
 void
 main(int arg, char **argv)
 {
-    printf("SeraTerm Version: %f\n", SERATERM_VERSION);
+    printf("SeraTerm Version: %f\n", 0.1f);
     exit(0);
 }
